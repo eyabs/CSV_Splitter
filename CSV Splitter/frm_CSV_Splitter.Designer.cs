@@ -43,6 +43,8 @@
             this.dgvUnevenSplit = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
             this.numOutFilesUneven = new System.Windows.Forms.NumericUpDown();
+            this.tabSplitSortCode = new System.Windows.Forms.TabPage();
+            this.lblSortCodes = new System.Windows.Forms.Label();
             this.txt_infile = new System.Windows.Forms.TextBox();
             this.btn_SelectCSV = new System.Windows.Forms.Button();
             this.grpbox_inputFile = new System.Windows.Forms.GroupBox();
@@ -50,8 +52,6 @@
             this.ofd_inputCSV = new System.Windows.Forms.OpenFileDialog();
             this.fbd_outputFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.btn_split = new System.Windows.Forms.Button();
-            this.tabSplitSortCode = new System.Windows.Forms.TabPage();
-            this.lblSortCodes = new System.Windows.Forms.Label();
             grpbox_outputOptions = new System.Windows.Forms.GroupBox();
             lbl_numItems = new System.Windows.Forms.Label();
             grpbox_outputOptions.SuspendLayout();
@@ -62,8 +62,8 @@
             this.tabSplitUnevenly.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvUnevenSplit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numOutFilesUneven)).BeginInit();
-            this.grpbox_inputFile.SuspendLayout();
             this.tabSplitSortCode.SuspendLayout();
+            this.grpbox_inputFile.SuspendLayout();
             this.SuspendLayout();
             // 
             // grpbox_outputOptions
@@ -71,6 +71,7 @@
             grpbox_outputOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            grpbox_outputOptions.BackColor = System.Drawing.SystemColors.Window;
             grpbox_outputOptions.Controls.Add(this.txt_outFolder);
             grpbox_outputOptions.Controls.Add(this.btn_selectOutPath);
             grpbox_outputOptions.Location = new System.Drawing.Point(12, 98);
@@ -118,15 +119,16 @@
             this.tabcSplitOpts.Controls.Add(this.tabEvenSplit);
             this.tabcSplitOpts.Controls.Add(this.tabSplitUnevenly);
             this.tabcSplitOpts.Controls.Add(this.tabSplitSortCode);
-            this.tabcSplitOpts.Location = new System.Drawing.Point(419, 21);
+            this.tabcSplitOpts.Enabled = false;
+            this.tabcSplitOpts.Location = new System.Drawing.Point(419, 12);
             this.tabcSplitOpts.Name = "tabcSplitOpts";
             this.tabcSplitOpts.SelectedIndex = 0;
-            this.tabcSplitOpts.Size = new System.Drawing.Size(253, 338);
+            this.tabcSplitOpts.Size = new System.Drawing.Size(253, 347);
             this.tabcSplitOpts.TabIndex = 15;
             // 
             // tabEvenSplit
             // 
-            this.tabEvenSplit.BackColor = System.Drawing.SystemColors.Control;
+            this.tabEvenSplit.BackColor = System.Drawing.SystemColors.Window;
             this.tabEvenSplit.Controls.Add(this.numUD_numPerFile);
             this.tabEvenSplit.Controls.Add(this.lbl_numItemsPerFile);
             this.tabEvenSplit.Controls.Add(this.numUD_numFiles);
@@ -134,7 +136,7 @@
             this.tabEvenSplit.Location = new System.Drawing.Point(4, 22);
             this.tabEvenSplit.Name = "tabEvenSplit";
             this.tabEvenSplit.Padding = new System.Windows.Forms.Padding(3);
-            this.tabEvenSplit.Size = new System.Drawing.Size(245, 312);
+            this.tabEvenSplit.Size = new System.Drawing.Size(245, 321);
             this.tabEvenSplit.TabIndex = 0;
             this.tabEvenSplit.Text = "Split Evenly";
             this.tabEvenSplit.Enter += new System.EventHandler(this.tabEvenSplit_Enter);
@@ -202,14 +204,14 @@
             // 
             // tabSplitUnevenly
             // 
-            this.tabSplitUnevenly.BackColor = System.Drawing.SystemColors.Control;
+            this.tabSplitUnevenly.BackColor = System.Drawing.SystemColors.Window;
             this.tabSplitUnevenly.Controls.Add(this.dgvUnevenSplit);
             this.tabSplitUnevenly.Controls.Add(this.label1);
             this.tabSplitUnevenly.Controls.Add(this.numOutFilesUneven);
             this.tabSplitUnevenly.Location = new System.Drawing.Point(4, 22);
             this.tabSplitUnevenly.Name = "tabSplitUnevenly";
             this.tabSplitUnevenly.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSplitUnevenly.Size = new System.Drawing.Size(245, 312);
+            this.tabSplitUnevenly.Size = new System.Drawing.Size(245, 321);
             this.tabSplitUnevenly.TabIndex = 1;
             this.tabSplitUnevenly.Text = "Split Unevenly";
             this.tabSplitUnevenly.Enter += new System.EventHandler(this.tabSplitUnevenly_Enter);
@@ -222,10 +224,12 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvUnevenSplit.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvUnevenSplit.BackgroundColor = System.Drawing.SystemColors.Window;
             this.dgvUnevenSplit.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvUnevenSplit.GridColor = System.Drawing.SystemColors.Window;
             this.dgvUnevenSplit.Location = new System.Drawing.Point(6, 32);
             this.dgvUnevenSplit.Name = "dgvUnevenSplit";
-            this.dgvUnevenSplit.Size = new System.Drawing.Size(233, 274);
+            this.dgvUnevenSplit.Size = new System.Drawing.Size(233, 283);
             this.dgvUnevenSplit.TabIndex = 13;
             this.dgvUnevenSplit.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvUnevenSplit_CellEndEdit);
             this.dgvUnevenSplit.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dgvUnevenSplit_CellValidating);
@@ -268,6 +272,31 @@
             0});
             this.numOutFilesUneven.ValueChanged += new System.EventHandler(this.numOutFilesUneven_ValueChanged);
             // 
+            // tabSplitSortCode
+            // 
+            this.tabSplitSortCode.BackColor = System.Drawing.SystemColors.Window;
+            this.tabSplitSortCode.Controls.Add(this.lblSortCodes);
+            this.tabSplitSortCode.Location = new System.Drawing.Point(4, 22);
+            this.tabSplitSortCode.Name = "tabSplitSortCode";
+            this.tabSplitSortCode.Padding = new System.Windows.Forms.Padding(3);
+            this.tabSplitSortCode.Size = new System.Drawing.Size(245, 321);
+            this.tabSplitSortCode.TabIndex = 2;
+            this.tabSplitSortCode.Text = "Split By Sort Codes";
+            this.tabSplitSortCode.Enter += new System.EventHandler(this.tabSplitSortCode_Enter);
+            // 
+            // lblSortCodes
+            // 
+            this.lblSortCodes.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
+            this.lblSortCodes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblSortCodes.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSortCodes.Location = new System.Drawing.Point(6, 20);
+            this.lblSortCodes.Name = "lblSortCodes";
+            this.lblSortCodes.Size = new System.Drawing.Size(233, 106);
+            this.lblSortCodes.TabIndex = 0;
+            this.lblSortCodes.Text = "Split By Sort Code 1";
+            this.lblSortCodes.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.lblSortCodes.UseCompatibleTextRendering = true;
+            // 
             // txt_infile
             // 
             this.txt_infile.BackColor = System.Drawing.SystemColors.Window;
@@ -291,6 +320,7 @@
             // 
             this.grpbox_inputFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.grpbox_inputFile.BackColor = System.Drawing.SystemColors.Window;
             this.grpbox_inputFile.Controls.Add(this.txt_numItems);
             this.grpbox_inputFile.Controls.Add(lbl_numItems);
             this.grpbox_inputFile.Controls.Add(this.btn_SelectCSV);
@@ -316,7 +346,6 @@
             // ofd_inputCSV
             // 
             this.ofd_inputCSV.Filter = "\"CSV Files\"|*.csv";
-            this.ofd_inputCSV.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk);
             // 
             // btn_split
             // 
@@ -331,35 +360,13 @@
             this.btn_split.UseVisualStyleBackColor = true;
             this.btn_split.Click += new System.EventHandler(this.btn_split_Click);
             // 
-            // tabSplitSortCode
-            // 
-            this.tabSplitSortCode.BackColor = System.Drawing.SystemColors.Control;
-            this.tabSplitSortCode.Controls.Add(this.lblSortCodes);
-            this.tabSplitSortCode.Location = new System.Drawing.Point(4, 22);
-            this.tabSplitSortCode.Name = "tabSplitSortCode";
-            this.tabSplitSortCode.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSplitSortCode.Size = new System.Drawing.Size(245, 312);
-            this.tabSplitSortCode.TabIndex = 2;
-            this.tabSplitSortCode.Text = "Split By Sort Codes";
-            this.tabSplitSortCode.Enter += new System.EventHandler(this.tabSplitSortCode_Enter);
-            // 
-            // lblSortCodes
-            // 
-            this.lblSortCodes.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
-            this.lblSortCodes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblSortCodes.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSortCodes.Location = new System.Drawing.Point(6, 20);
-            this.lblSortCodes.Name = "lblSortCodes";
-            this.lblSortCodes.Size = new System.Drawing.Size(233, 106);
-            this.lblSortCodes.TabIndex = 0;
-            this.lblSortCodes.Text = "Split By Sort Code 1";
-            this.lblSortCodes.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.lblSortCodes.UseCompatibleTextRendering = true;
-            // 
             // frm_CSV_Splitter
             // 
+            this.AcceptButton = this.btn_split;
+            this.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(684, 362);
             this.Controls.Add(grpbox_outputOptions);
             this.Controls.Add(this.btn_split);
@@ -381,9 +388,9 @@
             this.tabSplitUnevenly.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvUnevenSplit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numOutFilesUneven)).EndInit();
+            this.tabSplitSortCode.ResumeLayout(false);
             this.grpbox_inputFile.ResumeLayout(false);
             this.grpbox_inputFile.PerformLayout();
-            this.tabSplitSortCode.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

@@ -125,6 +125,7 @@ namespace CSV_Splitter
                 loopCounter--;
             }
             reader.Close();
+            reader.Dispose();
             return loopCounter;
         }
     }

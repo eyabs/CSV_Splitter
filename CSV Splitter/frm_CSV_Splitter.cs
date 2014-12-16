@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -14,6 +15,9 @@ namespace CSV_Splitter
 {
     public partial class frm_CSV_Splitter : Form
     {
+        //
+        // Private Variables.
+        //
         private string filePath;
         private string fileName;
         private string outfileFolder;
@@ -28,10 +32,16 @@ namespace CSV_Splitter
         //public List<long> unevenIndex;
         //public List<long> unevenFileRecordNums;
         
+        //
+        // Private Object Declarations.
+        //
         private FileSplitter infile;
         private UnevenSplitter uSplit;
         private SortCodeSplitter cSplit;
 
+        //
+        // Initializing the form.
+        //
         public frm_CSV_Splitter()
         {
             InitializeComponent();
@@ -46,6 +56,9 @@ namespace CSV_Splitter
             numUD_numPerFile.Value = numPerFile;
         }
 
+        //
+        // These concern the number of files, records, etc.
+        //
         private long findNumRecords(string aFilePath)
         {
             long numLines = 0;
@@ -55,22 +68,22 @@ namespace CSV_Splitter
                 inFile.ReadLine();
                 numLines++;
             } while (inFile.Peek() != -1);
+            numLines--;
             totalNumRecords = numLines;
+            inFile.Close();
+            inFile.Dispose();
             return numLines;
         }
-
         public long numItems()
         {
             return Convert.ToInt64(txt_numItems.Text);
         }
-
         public long findNumPerFile()
         {
             numPerFile = (long)Math.Ceiling((double)infile.numRecords / (double) numFiles);
             //numFiles = (long)Math.Ceiling((double)infile.numRecords / (double)numPerFile);
             return numPerFile;
         }
-
         public long findNumFiles()
         {
             numFiles = (long)Math.Ceiling( (double) infile.numRecords / (double)numPerFile);
@@ -78,14 +91,22 @@ namespace CSV_Splitter
             return numFiles;
         }
 
+        // Update the num files / num per file for even split
         private void numUD_numFiles_ValueChanged(object sender, EventArgs e)
         {
-            numUD_numPerFile.ValueChanged -= new System.EventHandler(numUD_numPerFile_ValueChanged);
-            numFiles = Convert.ToInt64(numUD_numFiles.Value);
-            numUD_numPerFile.Value = findNumPerFile();
-            numUD_numPerFile.ValueChanged += new System.EventHandler(numUD_numPerFile_ValueChanged);
+            try
+            {
+                numUD_numPerFile.ValueChanged -= new System.EventHandler(numUD_numPerFile_ValueChanged);
+                numFiles = Convert.ToInt64(numUD_numFiles.Value);
+                numUD_numPerFile.Value = findNumPerFile();
+                numUD_numPerFile.ValueChanged += new System.EventHandler(numUD_numPerFile_ValueChanged);
+            }
+            catch
+            {
+                numUD_numPerFile.ValueChanged += new System.EventHandler(numUD_numPerFile_ValueChanged);                
+                return;
+            }
         }
-
         private void numUD_numPerFile_ValueChanged(object sender, EventArgs e)
         {
             //numUD_numFiles.Value = numUD_numFiles.Value;
@@ -110,18 +131,15 @@ namespace CSV_Splitter
             numUD_numFiles.ValueChanged += new System.EventHandler(numUD_numFiles_ValueChanged);
         }
 
+        // Create the DataGridView for the uneven split.
         private void createDGV(UnevenSplitter aSplitDetails)
         {
             dgvUnevenSplit.DataSource = aSplitDetails.tblUnevenSplit;
             dgvUnevenSplit.Columns["File #"].ReadOnly = true;
             dgvUnevenSplit[1, dgvUnevenSplit.RowCount - 1].ReadOnly = true;
-        }
+        }        
         
-        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
-        {
-
-        }
-
+        // Functions which call the file splitting methods
         private void splitEven()
         {
             
@@ -149,13 +167,23 @@ namespace CSV_Splitter
         }
         private void splitSC1()
         {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             cSplit.SplitBySortCode1(filePath, outfileFolder);
+            stopwatch.Stop();
+            MessageBox.Show(String.Format("Time Elapsed: {0}", stopwatch.Elapsed));
         }
         
+
+        //
+        // Event Handling methods.
+        //
         private void btn_split_Click(object sender, EventArgs e)
         {
+            this.UseWaitCursor = true;
             if (inFileIsSelected && outFolderIsSelected)
             {
+                
                 switch(splitType)
                 {
                     case 1:
@@ -164,8 +192,10 @@ namespace CSV_Splitter
                     case 2:
                         MessageBox.Show("Splitting by Specified Size.");
                         splitUneven();
+                        MessageBox.Show("Done!");
                         break;
                     case 3:
+                        
                         MessageBox.Show("Splitting by Sortcodes.");
                         splitSC1();
                         MessageBox.Show("Done!");
@@ -185,6 +215,7 @@ namespace CSV_Splitter
                     MessageBox.Show("No Output Folder Selected.", "Error");
                 }
             }
+            this.UseWaitCursor = false;
                 
         }
 
@@ -217,6 +248,8 @@ namespace CSV_Splitter
                 numFiles = 1;
                 numUD_numPerFile.Value = numPerFile;
                 numUD_numFiles.Value = numFiles;
+
+                tabcSplitOpts.Enabled = true;
 
             }
         }
@@ -360,6 +393,7 @@ namespace CSV_Splitter
 
             }
         }
+
 
 
     }

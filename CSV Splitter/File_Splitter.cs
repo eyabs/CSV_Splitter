@@ -188,6 +188,7 @@ namespace CSV_Splitter
                         inputLineNum++;
                     }
                     outFile.Close();
+                    outFile.Dispose();
                 }
                 if (fileNum == aNumFilesOut)
                 {
@@ -199,6 +200,7 @@ namespace CSV_Splitter
                         inputLineNum++;
                     }
                     outFile.Close();
+                    outFile.Dispose();
                 }
             }
             infile.Close();
@@ -367,20 +369,28 @@ namespace CSV_Splitter
             string header = reader.ReadLine();
 
             long loopCount = 1;
+
+            // Loop Over Each file
             foreach ( long recCount in _splitSizes)
             {
                 outfileName = String.Format("{0}\\{1}_{2}_{3}{4}",
                                             aOutPath, infileName, loopCount, recCount, extension);
                 writer = new StreamWriter(outfileName);
+
+                // Write the Header.
                 writer.WriteLine(header);
+
+                // Loop over each record.
                 for (long recNum = 0; recNum < recCount; recNum++)
                 {
                     writer.WriteLine(reader.ReadLine());
                 }
                 writer.Close();
+                writer.Dispose();
                 loopCount++;
             }
             reader.Close();
+            reader.Dispose();
 
             return 0;
         }
@@ -391,14 +401,14 @@ namespace CSV_Splitter
     {
         private string[] sortCodes = new string[] { "Y2","Y1","Y0","S","N","L",
                                                     "D","C2","C1","A","9","6",
-                                                    "5","19","18","14","10" };
+                                                    "5","19","18","14","10","Error" };
 
         Assembly _sortCodeAssembly;
 
         public int zipIndex { get; private set;}
         private long totalCount=0;
         public List<string> threeDigitZips = new List<string>();
-        public List<string> sortCode1 = new List<string>();
+        public List<string> sortCode1DB = new List<string>();
         //public List<string> sortCode2 = new List<string>();
         
         public SortCodeSplitter()
@@ -421,10 +431,11 @@ namespace CSV_Splitter
                 setLine(reader.ReadLine());
                 sParseLine();
                 threeDigitZips.Add(ArrLine[0]);
-                sortCode1.Add(ArrLine[1]);
+                sortCode1DB.Add(ArrLine[1]);
                 //sortCode2.Add(ArrLine[2]);
             }while (reader.Peek() != -1);
             reader.Close();
+            reader.Dispose();
         }
 
         private void findZipIndex()
@@ -440,8 +451,8 @@ namespace CSV_Splitter
                 index++;
             }
         }
-
-        public int SplitBySortCode1( string aInFile, string aOutPath )
+        /*
+        public int oldSplitBySortCode1( string aInFile, string aOutPath )
         {
             inFile = aInFile;
             outPath = aOutPath;
@@ -484,11 +495,12 @@ namespace CSV_Splitter
                 // Read the input file.
                 do
                 {
+                    //frm_CSV_Splitter.progressBar1.Value = 100 * codeIndex / sortCodes.Length; 
                     setAndParseLine(reader.ReadLine());
                     codeIndex = threeDigitZips.IndexOf((ArrLine[zipIndex]).Substring(0,3));
                     try
                     {
-                        recordCode = sortCode1[codeIndex];
+                        recordCode = sortCode1DB[codeIndex];
                     }
                     catch
                     {
@@ -504,9 +516,11 @@ namespace CSV_Splitter
 
                 } while (reader.Peek() != -1);
                 
-                // Close the readers.
+                // Close the readers/writers.
                 reader.Close();
+                reader.Dispose();
                 writer.Close();
+                writer.Dispose();
                 
                 // update total count.
                 totalCount += recordCount;
@@ -530,10 +544,10 @@ namespace CSV_Splitter
             {
                 totalCount += writeErrors();
             }
-            MessageBox.Show(totalCount.ToString());
+            //MessageBox.Show(totalCount.ToString());
             return 0;
         }
-
+        */
         private long writeErrors()
         {
             // Write the header and Find the Zip Code Index.
@@ -565,6 +579,9 @@ namespace CSV_Splitter
             } while (reader.Peek() != -1);
 
             errorWriter.Close();
+            errorWriter.Dispose();
+            reader.Close();
+            reader.Dispose();
 
             // Check if any Errors.
             if(errorCount == 0)
@@ -585,6 +602,112 @@ namespace CSV_Splitter
             // Return the number of Errors.
             return errorCount;
         }
+
+        public int SplitBySortCode1( string aInFile, string aOutPath )
+        {
+            inFile = aInFile;
+            outPath = aOutPath;
+            int totalRecordCount = 0;
+            
+            // Counts of records corresponding to each sort code.
+            List<int> codeCounts = new List<int>();
+            // Initialize sort code counts to 0.
+            foreach (string code in sortCodes)
+            {
+                codeCounts.Add(0);
+            }
+
+
+            // Check if the file exists.
+            if (!File.Exists(aInFile))
+            {
+                // Return an error value.
+                return -1;
+            }
+            findFName();
+            getCodes();
+
+           createOutFiles();
+            /*
+            using (StreamReader reader = new StreamReader(inFile))
+            {
+                setAndParseHeader(reader.ReadLine());
+                foreach (string code in sortCodes)
+                {
+                    string outName = String.Format("{0}\\{1}_sc{2}.csv", outPath, fName, code);
+                    using (StreamWriter writer = new StreamWriter(outName, false))
+                    {
+                        writer.WriteLine(StrHeader);
+                    }
+                }
+            }*/
+
+            findZipIndex();
+
+            // Start reading the file.
+            using (StreamReader reader = new StreamReader(aInFile))
+            {
+                int sortCodeIndex;
+                string zipCode;
+                string sortCode;
+                string outName;
+                do
+                {
+                    setAndParseLine(reader.ReadLine());
+
+                    zipCode = ArrLine[zipIndex];
+                    sortCodeIndex = threeDigitZips.IndexOf(zipCode.Substring(0, 3));
+                    try
+                    {
+                        sortCode = sortCode1DB[sortCodeIndex];
+                    }
+                    catch
+                    {
+                        sortCode = "Error";
+                    }
+                    outName = String.Format("{0}\\{1}_sc{2}.csv", aOutPath, fName, sortCode);
+
+                    using (StreamWriter writer = new StreamWriter(outName,true))
+                    {
+                        writer.WriteLine(StrLine);
+                    }
+
+                    totalRecordCount++;
+                } while (reader.Peek() != -1);
+            }
+            //MessageBox.Show(numFailed.ToString() + " Records failed to write.");
+            return totalRecordCount;
+
+        }
+
+        private void createOutFiles()
+        {
+
+            using (StreamReader reader = new StreamReader (inFile))
+            {
+                setAndParseHeader(reader.ReadLine());
+                foreach (string code in sortCodes)
+                {
+                    string outName = String.Format("{0}\\{1}_sc{2}.csv", outPath, fName, code);
+                    using (StreamWriter writer = new StreamWriter(outName, false))
+                    {
+                        writer.WriteLine(StrHeader);
+                    }
+                }
+            }
+
+        }
+
+        private int findSortCodeIndex(string aSortCode)
+        {
+            int index;
+            for (index = 0; index < 17; index++)
+            {
+                if (aSortCode.Equals(sortCodes[index])) return index;
+            }
+            return 17;
+        }
+
 
     }
 }
